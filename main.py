@@ -31,5 +31,50 @@ def test_geo_code():
     pass
 
 
+def get_driving(loc_origin, loc_destination):
+    url = "https://restapi.amap.com/v5/direction/driving?parameters"
+    params = {
+        "key": AMAP_KEY,
+        "origin": loc_origin,
+        "destination": loc_destination,
+        "show_fields": "cost",
+    }
+    rsp = requests.post(url, params=params)
+    if rsp and rsp.status_code == 200:
+        data = rsp.json()
+        if data["status"] == "1":
+            return data
+    return {}
+
+
+def get_driving_cost(loc_origin, loc_destination):
+    driving_info = get_driving(loc_origin, loc_destination)
+    route = driving_info.get("route", {})
+    taxi_cost = route.get("taxi_cost", "?")
+    paths = route.get("paths", [])
+    if len(paths) > 0:
+        path = paths[0]
+        distance = path.get("distance", "?")
+        duration = path.get("cost", {}).get("duration", "?")
+        if duration != "?":
+            duration = "{:.1f}".format(float(duration) / 60)
+    else:
+        distance = "?"
+        duration = "?"
+
+    cost = "{}min,{}m,{}rmb".format(duration, distance, taxi_cost)
+    return cost
+
+
+def test_driving():
+    loc_origin = "116.441727,39.968358"
+    loc_destination = "116.343769,39.966839"
+    # get_driving(loc_origin, loc_destination)
+    cost = get_driving_cost(loc_origin, loc_destination)
+    print("cost = {}".format(cost))
+    pass
+
+
 if __name__ == "__main__":
+    test_driving()
     pass

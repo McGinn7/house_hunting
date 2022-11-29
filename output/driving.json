@@ -1,0 +1,102 @@
+{
+    "status": "1",
+    "info": "OK",
+    "infocode": "10000",
+    "count": "1",
+    "route": {
+        "origin": "116.441727,39.968358",
+        "destination": "116.343769,39.966839",
+        "taxi_cost": "27",
+        "paths": [
+            {
+                "distance": "9184",
+                "restriction": "0",
+                "cost": {
+                    "duration": "694",
+                    "tolls": "0",
+                    "toll_distance": "0",
+                    "traffic_lights": "0"
+                },
+                "steps": [
+                    {
+                        "instruction": "沿西坝河北路向西南行驶164米右转",
+                        "orientation": "西南",
+                        "road_name": "西坝河北路",
+                        "step_distance": "164",
+                        "cost": {
+                            "duration": "35",
+                            "tolls": "0",
+                            "toll_distance": "0",
+                            "toll_road": "",
+                            "traffic_lights": "0"
+                        }
+                    },
+                    {
+                        "instruction": "沿北三环东路辅路向西行驶1.0千米靠左进入主路",
+                        "orientation": "西",
+                        "road_name": "北三环东路辅路",
+                        "step_distance": "1032",
+                        "cost": {
+                            "duration": "94",
+                            "tolls": "0",
+                            "toll_distance": "0",
+                            "toll_road": "",
+                            "traffic_lights": "0"
+                        }
+                    },
+                    {
+                        "instruction": "沿北三环东路入口途径北三环东路、北三环中路、北三环西路向西行驶6.9千米向右前方行驶进入辅路",
+                        "orientation": "西",
+                        "road_name": "北三环东路入口",
+                        "step_distance": "6913",
+                        "cost": {
+                            "duration": "390",
+                            "tolls": "0",
+                            "toll_distance": "0",
+                            "toll_road": "",
+                            "traffic_lights": "0"
+                        }
+                    },
+                    {
+                        "instruction": "沿北三环西路出口途径北三环西路辅路向西行驶698米左转调头",
+                        "orientation": "西",
+                        "road_name": "北三环西路出口",
+                        "step_distance": "698",
+                        "cost": {
+                            "duration": "100",
+                            "tolls": "0",
+                            "toll_distance": "0",
+                            "toll_road": "",
+                            "traffic_lights": "0"
+                        }
+                    },
+                    {
+                        "instruction": "沿北三环西路辅路向东行驶330米右转",
+                        "orientation": "东",
+                        "road_name": "北三环西路辅路",
+                        "step_distance": "330",
+                        "cost": {
+                            "duration": "66",
+                            "tolls": "0",
+                            "toll_distance": "0",
+                            "toll_road": "",
+                            "traffic_lights": "0"
+                        }
+                    },
+                    {
+                        "instruction": "向东南行驶47米到达目的地",
+                        "orientation": "东南",
+                        "step_distance": "47",
+                        "cost": {
+                            "duration": "9",
+                            "tolls": "0",
+                            "toll_distance": "0",
+                            "toll_road": "",
+                            "traffic_lights": "0"
+                        }
+                    }
+                ]
+            }
+        ]
+    }
+}
