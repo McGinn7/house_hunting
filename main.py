@@ -3,7 +3,7 @@ import requests
 AMAP_KEY = "055eb143f76c06cad04890b0d396090e"
 
 
-def test_geo_code(address, city="beijing"):
+def get_geo_code(address, city="beijing"):
     url = "https://restapi.amap.com/v3/geocode/geo?parameters"
     params = {
         "key": AMAP_KEY,
@@ -20,8 +20,16 @@ def test_geo_code(address, city="beijing"):
     return None
 
 
-if __name__ == "__main__":
+def test_geo_code():
     addr = "北京朝阳西坝河北里202号院8号楼"
-    loc = test_geo_code(addr)
-    print("address = {}, location = {}".format(addr, loc))    
+    loc = get_geo_code(addr)
+    print("address = {}, location = {}".format(addr, loc))
+
+    addr = "大钟寺地铁站"
+    loc = get_geo_code(addr)
+    print("address = {}, location = {}".format(addr, loc))
+    pass
+
+
+if __name__ == "__main__":
     pass
