@@ -1,5 +1,9 @@
+import json
+import logging
+
 import requests
 from bs4 import BeautifulSoup
+from tqdm import tqdm
 
 
 class BeiKe:
@@ -11,39 +15,54 @@ class BeiKe:
             "total_price": "div[class='totalPrice totalPrice2']",
             "unit_price": "div[class='unitPrice']",
         }
-        pass
 
     def query(self, region, condition):
-        url = self.url_template.format(region=region, condition=condition)
-        rsp = requests.get(url)
-        html = BeautifulSoup(rsp.text, "html.parser")
-        house_list = html.select("ul[class='sellListContent'] > li")
-        for index, house in enumerate(house_list):
-            data = {}
-            for key, selector in self.house_key.items():
-                ele = house.select_one(selector)
-                if ele is None:
-                    value = "?"
-                else:
-                    value = str(ele.text).strip().replace(" ", "").replace("\n", "")
-                data[key] = value
+        result = []
 
-            url = house.select_one("a").get("href")
-            print(
-                "index = {}, pos = {}, desc = {}, total_price = {}, unit_price = {}".format(
-                    index,
-                    data["position"],
-                    data["description"],
-                    data["total_price"],
-                    data["unit_price"],
-                )
-            )
-            pass
+        page, num_page = 0, 1
+        while page < num_page:
+            page += 1
+            logging.debug("page = {}, num_page = {}".format(page, num_page))
+            _condition = "pg{}{}".format(page, condition)
+            url = self.url_template.format(region=region, condition=_condition)
+            logging.debug("url = {}".format(url))
+            rsp = requests.get(url)
+            if rsp.status_code == 200:
+                html = BeautifulSoup(rsp.text, "html.parser")
 
-    pass
+                page_data = html.select_one(
+                    "div[class='page-box house-lst-page-box']"
+                ).get("page-data")
+                num_page = json.loads(page_data).get("totalPage", 1)
+
+                house_list = html.select("ul[class='sellListContent'] > li")
+                for house in tqdm(house_list):
+                    data = {}
+                    is_valid_house = True
+                    for key, selector in self.house_key.items():
+                        ele = house.select_one(selector)
+                        if ele is None:
+                            is_valid_house = False
+                            break
+                        else:
+                            value = (
+                                str(ele.text).strip().replace(" ", "").replace("\n", "")
+                            )
+                        data[key] = value
+                    if not is_valid_house:
+                        continue
+
+                    data["url"] = house.select_one("a").get("href")
+                    logging.debug("data = {}".format(data))
+                    result.append(data)
+        return result
 
 
 if __name__ == "__main__":
+    logging.basicConfig(level=logging.INFO)
+
     bk = BeiKe()
-    bk.query("chaoyang", "a2a3a4bp250ep450rs13")
+    house_list = bk.query("chaoyang", "sf1a2a3a4p1bp250ep450")
+    for house in house_list:
+        print(house)
     pass
