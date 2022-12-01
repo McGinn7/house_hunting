@@ -1,0 +1,264 @@
+{
+    "status": "1",
+    "info": "OK",
+    "infocode": "10000",
+    "route": {
+        "origin": "116.343769,39.966839",
+        "destination": "116.458313,39.912160",
+        "distance": "17324",
+        "cost": {
+            "taxi_fee": "42"
+        },
+        "transits": [
+            {
+                "cost": {
+                    "duration": "2852",
+                    "transit_fee": "5.0"
+                },
+                "distance": "15843",
+                "walking_distance": "1304",
+                "nightflag": "0",
+                "segments": [
+                    {
+                        "walking": {
+                            "destination": "116.345139,39.966614",
+                            "distance": "174",
+                            "origin": "116.343765,39.967083",
+                            "cost": {
+                                "duration": "149"
+                            },
+                            "steps": [
+                                {
+                                    "instruction": "步行62米左转",
+                                    "road": "",
+                                    "distance": "62"
+                                },
+                                {
+                                    "instruction": "步行32米向右前方行走",
+                                    "road": "",
+                                    "distance": "32"
+                                },
+                                {
+                                    "instruction": "步行13米左转",
+                                    "road": "",
+                                    "distance": "13"
+                                },
+                                {
+                                    "instruction": "步行67米到达大钟寺",
+                                    "road": "",
+                                    "distance": "67"
+                                }
+                            ]
+                        },
+                        "bus": {
+                            "buslines": [
+                                {
+                                    "departure_stop": {
+                                        "name": "大钟寺",
+                                        "id": "110100033066016",
+                                        "location": "116.345139,39.966612"
+                                    },
+                                    "arrival_stop": {
+                                        "name": "西直门",
+                                        "id": "110100033066017",
+                                        "location": "116.353226,39.941670"
+                                    },
+                                    "name": "地铁13号线(东直门--西直门)",
+                                    "id": "110100033066",
+                                    "type": "地铁线路",
+                                    "distance": "2859",
+                                    "cost": {
+                                        "duration": "301"
+                                    },
+                                    "bus_time_tips": "",
+                                    "bustimetag": "0",
+                                    "start_time": "",
+                                    "end_time": "",
+                                    "via_num": "0",
+                                    "via_stops": []
+                                }
+                            ]
+                        }
+                    },
+                    {
+                        "walking": {
+                            "destination": "116.355423,39.940479",
+                            "distance": "394",
+                            "origin": "116.353226,39.941666",
+                            "cost": {
+                                "duration": "337"
+                            },
+                            "steps": [
+                                {
+                                    "instruction": "步行363米到达西直门",
+                                    "road": "",
+                                    "distance": "363"
+                                }
+                            ]
+                        },
+                        "bus": {
+                            "buslines": [
+                                {
+                                    "departure_stop": {
+                                        "name": "西直门",
+                                        "id": "110100023099002",
+                                        "location": "116.355426,39.940474"
+                                    },
+                                    "arrival_stop": {
+                                        "name": "复兴门",
+                                        "id": "110100023099005",
+                                        "location": "116.356866,39.907242"
+                                    },
+                                    "name": "地铁2号线外环(西直门--西直门)",
+                                    "id": "110100023099",
+                                    "type": "地铁线路",
+                                    "distance": "3532",
+                                    "cost": {
+                                        "duration": "484"
+                                    },
+                                    "bus_time_tips": "",
+                                    "bustimetag": "0",
+                                    "start_time": "0510",
+                                    "end_time": "2300",
+                                    "via_num": "2",
+                                    "via_stops": [
+                                        {
+                                            "name": "车公庄",
+                                            "id": "110100023099003",
+                                            "location": "116.355867,39.932437"
+                                        },
+                                        {
+                                            "name": "阜成门",
+                                            "id": "110100023099004",
+                                            "location": "116.356215,39.923677"
+                                        }
+                                    ]
+                                }
+                            ]
+                        }
+                    },
+                    {
+                        "walking": {
+                            "destination": "116.357788,39.907173",
+                            "distance": "76",
+                            "origin": "116.356865,39.907238",
+                            "cost": {
+                                "duration": "65"
+                            },
+                            "steps": [
+                                {
+                                    "instruction": "步行87米到达复兴门",
+                                    "road": "",
+                                    "distance": "87"
+                                }
+                            ]
+                        },
+                        "bus": {
+                            "buslines": [
+                                {
+                                    "departure_stop": {
+                                        "name": "复兴门",
+                                        "id": "110100023110013",
+                                        "location": "116.357793,39.907174"
+                                    },
+                                    "arrival_stop": {
+                                        "name": "国贸",
+                                        "id": "110100023110021",
+                                        "location": "116.459707,39.908421"
+                                    },
+                                    "name": "地铁1号线八通线(古城--环球度假区)",
+                                    "id": "110100023110",
+                                    "type": "地铁线路",
+                                    "distance": "8148",
+                                    "cost": {
+                                        "duration": "950"
+                                    },
+                                    "bus_time_tips": "",
+                                    "bustimetag": "0",
+                                    "start_time": "0457",
+                                    "end_time": "2251",
+                                    "via_num": "7",
+                                    "via_stops": [
+                                        {
+                                            "name": "西单",
+                                            "id": "110100023110014",
+                                            "location": "116.376225,39.907194"
+                                        },
+                                        {
+                                            "name": "天安门西",
+                                            "id": "110100023110015",
+                                            "location": "116.391278,39.907472"
+                                        },
+                                        {
+                                            "name": "天安门东",
+                                            "id": "110100023110016",
+                                            "location": "116.401216,39.907780"
+                                        },
+                                        {
+                                            "name": "王府井",
+                                            "id": "110100023110017",
+                                            "location": "116.411571,39.908069"
+                                        },
+                                        {
+                                            "name": "东单",
+                                            "id": "110100023110018",
+                                            "location": "116.420327,39.908317"
+                                        },
+                                        {
+                                            "name": "建国门",
+                                            "id": "110100023110019",
+                                            "location": "116.434648,39.908555"
+                                        },
+                                        {
+                                            "name": "永安里",
+                                            "id": "110100023110020",
+                                            "location": "116.450330,39.908472"
+                                        }
+                                    ]
+                                }
+                            ]
+                        }
+                    },
+                    {
+                        "walking": {
+                            "destination": "116.458374,39.912102",
+                            "distance": "660",
+                            "origin": "116.459702,39.908421",
+                            "cost": {
+                                "duration": "565"
+                            },
+                            "steps": [
+                                {
+                                    "instruction": "步行174米右转",
+                                    "road": "",
+                                    "distance": "174"
+                                },
+                                {
+                                    "instruction": "沿建国门外大街辅路步行47米向右前方行走",
+                                    "road": "建国门外大街辅路",
+                                    "distance": "47"
+                                },
+                                {
+                                    "instruction": "沿金桐东路步行390米右转",
+                                    "road": "金桐东路",
+                                    "distance": "390"
+                                },
+                                {
+                                    "instruction": "沿景茂街步行32米左转",
+                                    "road": "景茂街",
+                                    "distance": "32"
+                                },
+                                {
+                                    "instruction": "步行17米",
+                                    "road": "",
+                                    "distance": "17"
+                                }
+                            ]
+                        }
+                    }
+                ]
+            }
+        ]
+    },
+    "count": "1"
+}

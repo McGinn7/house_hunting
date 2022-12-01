@@ -46,24 +46,75 @@ def get_driving_cost(loc_origin, loc_destination):
         path = paths[0]
         distance = path.get("distance", "?")
         duration = path.get("cost", {}).get("duration", "?")
-        if duration != "?":
-            duration = "{:.1f}".format(float(duration) / 60)
     else:
         distance = "?"
         duration = "?"
 
     logging.debug(
-        "origin = {}, destination = {}, duration = {}min, distance = {}m, taxi_cost = {}rmb".format(
+        "origin = {}, destination = {}, duration = {}s, distance = {}m, fee = {}rmb".format(
             loc_origin, loc_destination, duration, distance, taxi_cost
         )
     )
     result = {
         "duration": duration,
         "distance": distance,
-        "taxi_cost": taxi_cost,
+        "fee": taxi_cost,
     }
     return result
 
 
+def get_transit(loc_origin, loc_destination, city_code1="010", city_code2="010"):
+    url = "https://restapi.amap.com/v5/direction/transit/integrated?parameters"
+    params = {
+        "key": AMAP_KEY,
+        "origin": loc_origin,
+        "destination": loc_destination,
+        "city1": city_code1,
+        "city2": city_code2,
+        "AlternativeRoute": 1,
+        "time": "9-00",
+        "show_fields": "cost",
+    }
+    rsp = requests.get(url, params=params)
+    if rsp and rsp.status_code == 200:
+        data = rsp.json()
+        if data["status"] == "1":
+            return data
+    return {}
+
+
+def get_trainsit_cost(loc_origin, loc_destination, city_code1="010", city_code2="010"):
+    transit_info = get_transit(loc_origin, loc_destination, city_code1, city_code2)
+    route = transit_info.get("route", {})
+    transits = route.get("transits", [])
+    if len(transits) > 0:
+        transit = transits[0]
+        duration = transit.get("cost", {}).get("duration", "?")
+        distance = transit.get("walking_distance", "?")
+        transit_fee = transit.get("cost", {}).get("transit_fee", "?")
+    else:
+        duration = "?"
+        distance = "?"
+        transit_fee = "?"
+    result = {
+        "duration": duration,
+        "distance": distance,
+        "fee": transit_fee,
+    }
+    logging.debug(
+        "origin = {}, destination = {}, duration = {}s, distance = {}m, fee = {}rmb".format(
+            loc_origin,
+            loc_destination,
+            result["duration"],
+            result["distance"],
+            result["fee"],
+        )
+    )
+    return result
+
+
 if __name__ == "__main__":
+    logging.basicConfig(level=logging.INFO)
+
+    get_trainsit_cost("116.343769,39.966839", "116.441727,39.968358")
     pass
