@@ -1,3 +1,4 @@
+import logging
 import requests
 
 AMAP_KEY = "055eb143f76c06cad04890b0d396090e"
@@ -18,17 +19,6 @@ def get_geo_code(address, city="beijing"):
         location = geocodes[0].get("location")
         return location
     return None
-
-
-def test_geo_code():
-    address = [
-        "北京朝阳西坝河北里202号院8号楼",
-        "大钟寺地铁站",
-        "国贸大厦A座",
-    ]
-    for addr in address:
-        loc = get_geo_code(addr)
-        print("address = {}, location = {}".format(addr, loc))
 
 
 def get_driving(loc_origin, loc_destination):
@@ -62,19 +52,18 @@ def get_driving_cost(loc_origin, loc_destination):
         distance = "?"
         duration = "?"
 
-    cost = "{}min,{}m,{}rmb".format(duration, distance, taxi_cost)
-    return cost
-
-
-def test_driving():
-    loc_origin = "116.441727,39.968358"
-    loc_destination = "116.343769,39.966839"
-    # get_driving(loc_origin, loc_destination)
-    cost = get_driving_cost(loc_origin, loc_destination)
-    print("cost = {}".format(cost))
-    pass
+    logging.debug(
+        "origin = {}, destination = {}, duration = {}min, distance = {}m, taxi_cost = {}rmb".format(
+            loc_origin, loc_destination, duration, distance, taxi_cost
+        )
+    )
+    result = {
+        "duration": duration,
+        "distance": distance,
+        "taxi_cost": taxi_cost,
+    }
+    return result
 
 
 if __name__ == "__main__":
-    test_geo_code()
     pass
