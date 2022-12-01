@@ -30,10 +30,10 @@ class BeiKe:
             if rsp.status_code == 200:
                 html = BeautifulSoup(rsp.text, "html.parser")
 
-                page_data = html.select_one(
-                    "div[class='page-box house-lst-page-box']"
-                ).get("page-data")
-                num_page = json.loads(page_data).get("totalPage", 1)
+                page_data = html.select_one("div[class='page-box house-lst-page-box']")
+                if page_data:
+                    page_data = page_data.get("page-data")
+                    num_page = json.loads(page_data).get("totalPage", 1)
 
                 house_list = html.select("ul[class='sellListContent'] > li")
                 for house in tqdm(house_list):
