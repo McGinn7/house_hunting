@@ -21,14 +21,14 @@ def get_geo_code(address, city="beijing"):
 
 
 def test_geo_code():
-    addr = "北京朝阳西坝河北里202号院8号楼"
-    loc = get_geo_code(addr)
-    print("address = {}, location = {}".format(addr, loc))
-
-    addr = "大钟寺地铁站"
-    loc = get_geo_code(addr)
-    print("address = {}, location = {}".format(addr, loc))
-    pass
+    address = [
+        "北京朝阳西坝河北里202号院8号楼",
+        "大钟寺地铁站",
+        "国贸大厦A座",
+    ]
+    for addr in address:
+        loc = get_geo_code(addr)
+        print("address = {}, location = {}".format(addr, loc))
 
 
 def get_driving(loc_origin, loc_destination):
@@ -76,5 +76,5 @@ def test_driving():
 
 
 if __name__ == "__main__":
-    test_driving()
+    test_geo_code()
     pass
