@@ -1,7 +1,30 @@
+import json
 import logging
+import os
 
-from beike import BeiKe
 from amap import get_geo_code, get_trainsit_cost
+from beike import BeiKe
+
+
+def deal_position2geocode(positions=[], filepath="./cache/position2geocode.json"):
+    position2geocode = {}
+    if os.path.exists(filepath):
+        try:
+            position2geocode = json.load(open(filepath, "r"))
+        except Exception as e:
+            logging.error(e)
+
+    for position in positions:
+        if position not in position2geocode:
+            geo_code = get_geo_code(position)
+            if geo_code is None:
+                logging.warn("failed to get geo code of {}".format(position))
+            else:
+                logging.debug("position = {}, geo_code = {}".format(position, geo_code))
+                position2geocode[position] = geo_code
+
+    json.dump(position2geocode, open(filepath, "w"))
+    return position2geocode
 
 
 def work():
@@ -26,14 +49,7 @@ def work():
         destinations.add(house["position"])
     logging.info("#destinations = {}".format(len(destinations)))
 
-    position2geocode = {}
-    for position in destinations:
-        geo_code = get_geo_code(position)
-        if geo_code is None:
-            logging.warn("failed to get geo code of {}".format(position))
-        else:
-            logging.debug("position = {}, geo_code = {}".format(position, geo_code))
-            position2geocode[position] = geo_code
+    position2geocode = deal_position2geocode(destinations)
 
     cost_info = {}
 
