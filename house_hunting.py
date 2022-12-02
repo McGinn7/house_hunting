@@ -27,10 +27,44 @@ def deal_position2geocode(positions=[], filepath="./cache/position2geocode.json"
     return position2geocode
 
 
+def deal_transit_cost(
+    origins, destinations, position2geocode, filepath="./cache/transit_cost.json"
+):
+    transit_cost = {}
+    if os.path.exists(filepath):
+        try:
+            transit_cost = json.load(open(filepath, "r"))
+        except Exception as e:
+            logging.error(e)
+
+    for origin in origins:
+        if origin not in position2geocode:
+            logging.error("location of origin({}) not found".format(origin))
+            continue
+        else:
+            location_origin = position2geocode[origin]
+        transit_cost_origin = transit_cost.setdefault(origin, dict())
+        for destination in destinations:
+            if destination not in position2geocode:
+                logging.error(
+                    "location of destination({}) not found".format(destination)
+                )
+                continue
+            else:
+                location_destination = position2geocode[destination]
+            if destination not in transit_cost_origin:
+                transit_cost_origin[destination] = get_trainsit_cost(
+                    location_origin, location_destination
+                )
+
+    json.dump(transit_cost, open(filepath, "w"))
+    return transit_cost
+
+
 def work():
     origins = [
-        "116.343769,39.966839",  # 大钟寺地铁站
-        "116.458313,39.912160",  # 国贸大厦A座
+        "大钟寺地铁站",
+        "国贸大厦A座",
     ]
     regions = [
         "chaoyang",
@@ -50,18 +84,17 @@ def work():
     logging.info("#destinations = {}".format(len(destinations)))
 
     position2geocode = deal_position2geocode(destinations)
+    transit_cost = deal_transit_cost(origins, destinations, position2geocode)
 
-    cost_info = {}
-
-    for house in house_list:
-        destination = position2geocode.get(house["position"])
-        for index, origin in enumerate(origins):
-            location_pair = (origin, destination)
-            if location_pair not in cost_info:
-                cost_info[location_pair] = get_trainsit_cost(origin, destination)
-            cost = cost_info.get(location_pair, {})
-            for key, value in cost.items():
-                house["{}_{}".format(key, index)] = value
+    for index, origin in enumerate(origins):
+        transit_cost_origin = transit_cost.get(origin, {})
+        for house in house_list:
+            destination = house["position"]
+            if destination in transit_cost_origin:
+                for key, value in transit_cost_origin[destination].items():
+                    house["{}_{}".format(key, index)] = value
+            else:
+                logging.warn("cost from {} to {} not found".format(origin, destination))
 
     for house in house_list:
         print(house)
