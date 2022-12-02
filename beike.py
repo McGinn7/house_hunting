@@ -55,6 +55,7 @@ class BeiKe:
                     data["url"] = house.select_one("a").get("href")
                     logging.debug("data = {}".format(data))
                     result.append(data)
+                logging.info("cur_page = {}, total_page = {}".format(page, num_page))
         return result
 
 

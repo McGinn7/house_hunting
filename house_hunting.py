@@ -3,12 +3,14 @@ import logging
 import os
 
 import pandas as pd
+from tqdm import tqdm
 
 from amap import get_geo_code, get_trainsit_cost
 from beike import BeiKe
 
 
 def deal_position2geocode(positions=[], filepath="./cache/position2geocode.json"):
+    logging.info("[deal_position2geocode] #positions = {}".format(len(positions)))
     position2geocode = {}
     if os.path.exists(filepath):
         try:
@@ -16,11 +18,11 @@ def deal_position2geocode(positions=[], filepath="./cache/position2geocode.json"
         except Exception as e:
             logging.error(e)
 
-    for position in positions:
+    for position in tqdm(positions):
         if position not in position2geocode:
             geo_code = get_geo_code(position)
             if geo_code is None:
-                logging.warn("failed to get geo code of {}".format(position))
+                logging.warning("failed to get geo code of {}".format(position))
             else:
                 logging.debug("position = {}, geo_code = {}".format(position, geo_code))
                 position2geocode[position] = geo_code
@@ -40,7 +42,7 @@ def deal_transit_cost(
             logging.error(e)
 
     for origin in origins:
-        if origin not in position2geocode:
+        if origin not in tqdm(position2geocode):
             logging.error("location of origin({}) not found".format(origin))
             continue
         else:
@@ -64,14 +66,16 @@ def deal_transit_cost(
 
 
 def save_houses_to_csv(houses, filepath="./houses.csv"):
+    num_key = max([len(house) for house in houses])
     data = {}
     for house in houses:
-        for key, value in house.items():
-            data.setdefault(key, list()).append(value)
+        if len(house) == num_key:
+            for key, value in house.items():
+                data.setdefault(key, list()).append(value)
 
     df = pd.DataFrame(data)
     df.to_csv(filepath)
-    print("save {} houses to {}".format(df.count(), filepath))
+    logging.info("save {} houses to {}".format(df.count(), filepath))
 
 
 def work():
@@ -82,7 +86,7 @@ def work():
     regions = [
         "chaoyang",
     ]
-    condition = "sf1a2a3a4p1bp250ep450"
+    condition = "sf1a1a2a3a4p1p2p3p4p5"
 
     house_list = []
     bk = BeiKe()
@@ -107,7 +111,9 @@ def work():
                 for key, value in transit_cost_origin[destination].items():
                     house["{}_{}".format(key, index)] = value
             else:
-                logging.warn("cost from {} to {} not found".format(origin, destination))
+                logging.warning(
+                    "cost from {} to {} not found".format(origin, destination)
+                )
 
     for house in house_list:
         logging.debug(house)
@@ -116,7 +122,7 @@ def work():
 
 
 if __name__ == "__main__":
-    logging.basicConfig(level=logging.DEBUG)
+    logging.basicConfig(level=logging.INFO)
 
     work()
     pass
