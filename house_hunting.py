@@ -2,6 +2,8 @@ import json
 import logging
 import os
 
+import pandas as pd
+
 from amap import get_geo_code, get_trainsit_cost
 from beike import BeiKe
 
@@ -61,6 +63,17 @@ def deal_transit_cost(
     return transit_cost
 
 
+def save_houses_to_csv(houses, filepath="./houses.csv"):
+    data = {}
+    for house in houses:
+        for key, value in house.items():
+            data.setdefault(key, list()).append(value)
+
+    df = pd.DataFrame(data)
+    df.to_csv(filepath)
+    print("save {} houses to {}".format(df.count(), filepath))
+
+
 def work():
     origins = [
         "大钟寺地铁站",
@@ -97,7 +110,9 @@ def work():
                 logging.warn("cost from {} to {} not found".format(origin, destination))
 
     for house in house_list:
-        print(house)
+        logging.debug(house)
+
+    save_houses_to_csv(house_list)
 
 
 if __name__ == "__main__":
