@@ -90,7 +90,7 @@ def work():
     bk = BeiKe()
 
     for region in regions:
-        region_houses = bk.query(region, condition)
+        region_houses = bk.query_ershoufang(region, condition)
         house_list.extend(region_houses)
 
     destinations = set()
@@ -98,6 +98,7 @@ def work():
         destinations.add(house["position"])
     logging.info("#destinations = {}".format(len(destinations)))
 
+    deal_position2geocode(origins)
     position2geocode = deal_position2geocode(destinations)
     traffic_mode = {
         "transit": get_trainsit_cost,

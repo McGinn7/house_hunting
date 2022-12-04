@@ -16,7 +16,7 @@ class BeiKe:
             "unit_price": "div[class='unitPrice']",
         }
 
-    def query(self, region, condition):
+    def query_ershoufang(self, region, condition):
         result = []
 
         page, num_page = 0, 1
