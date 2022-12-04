@@ -5,7 +5,7 @@ import os
 import pandas as pd
 from tqdm import tqdm
 
-from amap import get_geo_code, get_trainsit_cost
+from amap import get_driving_cost, get_geo_code, get_trainsit_cost
 from beike import BeiKe
 
 
@@ -31,9 +31,7 @@ def deal_position2geocode(positions=[], filepath="./cache/position2geocode.json"
     return position2geocode
 
 
-def deal_transit_cost(
-    origins, destinations, position2geocode, filepath="./cache/transit_cost.json"
-):
+def deal_traffic_cost(origins, destinations, position2geocode, cost_func, filepath):
     transit_cost = {}
     if os.path.exists(filepath):
         try:
@@ -57,7 +55,7 @@ def deal_transit_cost(
             else:
                 location_destination = position2geocode[destination]
             if destination not in transit_cost_origin:
-                transit_cost_origin[destination] = get_trainsit_cost(
+                transit_cost_origin[destination] = cost_func(
                     location_origin, location_destination
                 )
 
@@ -101,19 +99,31 @@ def work():
     logging.info("#destinations = {}".format(len(destinations)))
 
     position2geocode = deal_position2geocode(destinations)
-    transit_cost = deal_transit_cost(origins, destinations, position2geocode)
-
-    for index, origin in enumerate(origins):
-        transit_cost_origin = transit_cost.get(origin, {})
-        for house in house_list:
-            destination = house["position"]
-            if destination in transit_cost_origin:
-                for key, value in transit_cost_origin[destination].items():
-                    house["{}_{}".format(key, index)] = value
-            else:
-                logging.warning(
-                    "cost from {} to {} not found".format(origin, destination)
-                )
+    traffic_mode = {
+        "transit": get_trainsit_cost,
+        "driving": get_driving_cost,
+    }
+    for traffic, cost_func in traffic_mode.items():
+        traffic_cost = deal_traffic_cost(
+            origins,
+            destinations,
+            position2geocode,
+            cost_func,
+            "./cache/{}_cost.json".format(traffic),
+        )
+        for origin in origins:
+            traffic_cost_origin = traffic_cost.get(origin, {})
+            for house in house_list:
+                destination = house["position"]
+                if destination in traffic_cost_origin:
+                    for key, value in traffic_cost_origin[destination].items():
+                        house["{}_{}_{}".format(traffic, key, origin)] = value
+                else:
+                    logging.warning(
+                        "cost from {} to {} in {} not found".format(
+                            origin, destination, traffic
+                        )
+                    )
 
     for house in house_list:
         logging.debug(house)
