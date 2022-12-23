@@ -58,12 +58,71 @@ class BeiKe:
                 logging.info("cur_page = {}, total_page = {}".format(page, num_page))
         return result
 
+    def query_zufang(self, region, condition=""):
+        url_zufang = "https://bj.zu.ke.com/zufang/{region}/{condition}/#contentList"
+        house_key = {
+            "position": "p[class='content__list--item--des']",
+            "title": "p[class='content__list--item--title']",
+            "description": "p[class='content__list--item--des']",
+            "price": "span[class='content__list--item-price']",
+        }
+
+        result = []
+        page, num_page = 0, 1
+        while page < num_page:
+            page += 1
+            logging.info(
+                "[query_zufang] page = {}, num_page = {}".format(page, num_page)
+            )
+            _condition = "pg{}{}".format(page, condition)
+            url = url_zufang.format(region=region, condition=_condition)
+            logging.debug("[query_zufang] url = {}".format(url))
+            rsp = requests.get(url)
+            if rsp and rsp.status_code == 200:
+                html = BeautifulSoup(rsp.text, "html.parser")
+
+                page_data = html.select_one("div[class='content__pg']")
+                if page_data:
+                    page_data = page_data.get("data-totalpage")
+                    num_page = int(page_data)
+
+                house_list = html.select("div[class='content__list--item--main']")
+                logging.debug(
+                    "page = {}, house_list = {}".format(page, len(house_list))
+                )
+                for house in house_list:
+                    data = {}
+                    is_valid_house = True
+                    for key, selector in house_key.items():
+                        ele = house.select_one(selector)
+                        if ele is None:
+                            is_valid_house = False
+                            logging.debug(
+                                "invalid house, selector = {}".format(selector)
+                            )
+                            break
+                        else:
+                            value = (
+                                str(ele.text)
+                                .strip()
+                                .replace(" ", "")
+                                .replace("\n", "")
+                                .replace("-", "")
+                            )
+                            if key == "position":
+                                value = value.split("/")[0]
+                        data[key] = value
+                    if not is_valid_house:
+                        continue
+                    logging.debug(data)
+                    result.append(data)
+        return result
+
 
 if __name__ == "__main__":
     logging.basicConfig(level=logging.INFO)
 
     bk = BeiKe()
-    house_list = bk.query("chaoyang", "sf1a2a3a4p1bp250ep450")
-    for house in house_list:
-        print(house)
+    bk.query_zufang("changping", "rt200600000001")
+
     pass
