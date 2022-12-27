@@ -82,54 +82,98 @@ def work():
         "国贸大厦A座",
     ]
     regions = [
-        "chaoyang",
+        "fangzhuang1",
     ]
     condition = "sf1a1a2a3a4p1p2p3p4p5"
-
-    house_list = []
     bk = BeiKe()
-
+    house_list = []
     for region in regions:
         region_houses = bk.query_ershoufang(region, condition)
-        house_list.extend(region_houses)
+        for house in region_houses:
+            house["region"] = region
+            house_list.append(house)
+        # house_list = [
+        #     {
+        #         "position": "金丰园",
+        #     },
+        #     {
+        #         "position": "万年花城",
+        #     },
+        #     {
+        #         "position": "世嘉丽晶",
+        #     },
+        #     {
+        #         "position": "和义西里三区",
+        #     },
+        #     {
+        #         "position": "和义东里一区",
+        #     },
+        #     {
+        #         "position": "久敬佳园三区",
+        #     },
+        #     {
+        #         "position": "翠海明苑",
+        #     },
+        #     {
+        #         "position": "南庭新苑北区",
+        #     },
+        #     {
+        #         "position": "兴海家园月苑",
+        #     },
+        #     {
+        #         "position": "兴海家园星苑",
+        #     },
+        #     {
+        #         "position": "世嘉博苑",
+        #     },
+        #     {
+        #         "position": "瑞海家园一区",
+        #     },
+        #     {
+        #         "position": "郁花园二里",
+        #     },
+        #     {
+        #         "position": "太平家园",
+        #     },
+        # ]
 
-    destinations = set()
-    for house in house_list:
-        destinations.add(house["position"])
-    logging.info("#destinations = {}".format(len(destinations)))
+        destinations = set()
+        for house in house_list:
+            destinations.add(house["position"])
+        logging.info("#destinations = {}".format(len(destinations)))
 
-    deal_position2geocode(origins)
-    position2geocode = deal_position2geocode(destinations)
-    traffic_mode = {
-        "transit": get_trainsit_cost,
-        "driving": get_driving_cost,
-    }
-    for traffic, cost_func in traffic_mode.items():
-        traffic_cost = deal_traffic_cost(
-            origins,
-            destinations,
-            position2geocode,
-            cost_func,
-            "./cache/{}_cost.json".format(traffic),
-        )
-        for origin in origins:
-            traffic_cost_origin = traffic_cost.get(origin, {})
-            for house in house_list:
-                destination = house["position"]
-                if destination in traffic_cost_origin:
-                    for key, value in traffic_cost_origin[destination].items():
-                        house["{}_{}_{}".format(traffic, key, origin)] = value
-                else:
-                    logging.warning(
-                        "cost from {} to {} in {} not found".format(
-                            origin, destination, traffic
+        deal_position2geocode(origins)
+        position2geocode = deal_position2geocode(destinations)
+        traffic_mode = {
+            "transit": get_trainsit_cost,
+            "driving": get_driving_cost,
+        }
+        for traffic, cost_func in traffic_mode.items():
+            traffic_cost = deal_traffic_cost(
+                origins,
+                destinations,
+                position2geocode,
+                cost_func,
+                "./cache/{}_cost.json".format(traffic),
+            )
+            for origin in origins:
+                traffic_cost_origin = traffic_cost.get(origin, {})
+                for house in house_list:
+                    destination = house["position"]
+                    if destination in traffic_cost_origin:
+                        for key, value in traffic_cost_origin[destination].items():
+                            house["{}_{}_{}".format(traffic, key, origin)] = value
+                    else:
+                        logging.warning(
+                            "cost from {} to {} in {} not found".format(
+                                origin, destination, traffic
+                            )
                         )
-                    )
 
-    for house in house_list:
-        logging.debug(house)
+        for house in house_list:
+            logging.debug(house)
 
-    save_houses_to_csv(house_list)
+        save_houses_to_csv(house_list, f"./output/{region}_houses.csv")
 
 
 if __name__ == "__main__":
