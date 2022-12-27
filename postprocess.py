@@ -1,5 +1,76 @@
 import os
+
 import pandas as pd
+
+region_cn = {
+    "andingmen": "安定门",
+    "anzhen1": "安贞",
+    "aolinpikegongyuan11": "奥林匹克公园",
+    "baiziwan": "百子湾",
+    "beigongda": "北工大",
+    "beiyuan2": "北苑",
+    "cbd": "CBD",
+    "changying": "常营",
+    "chaoqing": "朝青",
+    "chaoyanggongyuan": "朝阳公园",
+    "chaoyangmenwai1": "朝阳门外",
+    "chengshousi1": "成寿寺",
+    "dashanzi": "大山子",
+    "dawanglu": "大望路",
+    "dingfuzhuang": "定福庄",
+    "dongba": "东坝",
+    "dongdaqiao": "东大桥",
+    "dongzhimen": "东直门",
+    "dougezhuang": "豆各庄",
+    "fangzhuang1": "方庄",
+    "fatou": "垡头",
+    "ganluyuan": "甘露园",
+    "gaobeidian": "高碑店",
+    "gongti": "工体",
+    "guangqumen": "广渠门",
+    "guanzhuang": "管庄",
+    "guozhan1": "国展",
+    "hepingli": "和平里",
+    "hongmiao": "红庙",
+    "huanlegu": "欢乐谷",
+    "huaweiqiao": "华威桥",
+    "huixinxijie": "惠新西街",
+    "jianguomenwai": "建国门外",
+    "jianxiangqiao1": "健翔桥",
+    "jinsong": "劲松",
+    "jiuxianqiao": "酒仙桥",
+    "liangmaqiao": "亮马桥",
+    "lishuiqiao1": "立水桥",
+    "madian1": "马甸",
+    "mudanyuan": "牡丹园",
+    "nanshatan1": "南沙滩",
+    "nongzhanguan": "农展馆",
+    "panjiayuan1": "潘家园",
+    "sanlitun": "三里屯",
+    "sanyuanqiao": "三元桥",
+    "shaoyaoju": "芍药居",
+    "shibalidian1": "十八里店",
+    "shifoying": "石佛营",
+    "shilibao": "十里堡",
+    "shilihe": "十里河",
+    "shoudoujichang1": "首都机场",
+    "shuangjing": "双井",
+    "shuangqiao": "双桥",
+    "sihui": "四惠",
+    "songjiazhuang": "宋家庄",
+    "taiyanggong": "太阳宫",
+    "tianshuiyuan": "甜水园",
+    "tongzhoubeiyuan": "通州北苑",
+    "tuanjiehu": "团结湖",
+    "wangjing": "望京",
+    "xiaohongmen": "小红门",
+    "xibahe": "西坝河",
+    "yansha1": "燕莎",
+    "yayuncun": "亚运村",
+    "yayuncunxiaoying": "亚运村小营",
+    "zhaoyangqita": "朝阳其它",
+    "zhongyangbieshuqu1": "中央别墅区",
+}
 
 
 def read_houses(dirpath):
@@ -74,6 +145,12 @@ def transform(df: pd.DataFrame):
             row["驾车_大钟寺"] = row["driving_duration_大钟寺地铁站"]
             row["公交_国贸"] = row["transit_duration_国贸大厦A座"]
             row["驾车_国贸"] = row["driving_duration_国贸大厦A座"]
+        except:
+            pass
+
+        try:
+            if row.get("region") in region_cn:
+                row["region"] = region_cn[row["region"]]
         except:
             pass
 
